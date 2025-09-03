@@ -1,28 +1,18 @@
-## GIF Editor (Video → GIF)
+## GIF Editor
 
-간단한 비디오(mp4/webm 등)를 클라이언트에서 GIF로 변환하는 데모입니다. FFmpeg.wasm을 사용하며 네트워크 업로드 없이 브라우저 내에서 처리합니다.
+### 라이브 데모
+- 데모: [https://gif-editor.vercel.app/](https://gif-editor.vercel.app/)
 
-### 사용법
-- 홈 화면에서 비디오를 선택합니다.
-- 옵션을 조정합니다:
-  - 시작 초, 길이(트림)
-  - 너비(px)
-  - FPS
-  - 팔레트 사용(권장)
-- "GIF 변환"을 누르면 미리보기와 "저장" 버튼이 표시됩니다.
+### 현재 구현된 기능
+- MP4 등의 비디오 파일을 GIF로 변환하기
 
-### 성능/용량 팁
-- GIF는 비효율적인 포맷입니다. 가능한 한 짧게(2–5초), 낮은 해상도(360–480px), 낮은 FPS(8–12)로 설정하세요.
-- "팔레트 사용"은 품질을 유지하면서 용량을 줄여줍니다.
-- 긴 영상/고해상도/높은 FPS 조합은 브라우저 메모리 사용량을 크게 늘립니다.
+### 추후 계획
+- GIF 편집 기능 (Crop, Resize, Progress bar 등등)
 
-### 브라우저 메모리 관리
-- FFmpeg.wasm은 변환 중 메모리를 많이 사용합니다.
-- 본 앱은 변환 후 MEMFS(`input.mp4`, `out.gif`, `palette.png`)를 즉시 삭제하고, 미리보기 URL도 컴포넌트 unmount 시 해제합니다.
-- 여전히 메모리 부족이 발생하면:
-  - 길이를 더 줄이거나, 너비/FPS를 낮추세요.
-  - 모바일/저사양 기기에서는 480px, FPS 8–10을 권장합니다.
-  - 아주 긴 영상은 서버 변환(ffmpeg 서버/Cloud Functions)로 오프로딩을 고려하세요.
+### 특징
+- WebAssembly 기반으로 정적 페이지에서 서버리스로 동작
+- 모든 작업이 로컬에서 이뤄지므로 파일을 서버에 업로드할 필요가 없음
 
-### 개발
-- `pnpm dev`로 실행
+### 사용 기술
+
+[![Tech Stack](https://skillicons.dev/icons?i=ts,react,vite,wasm,rust,tailwind,vercel&theme=dark)](https://skillicons.dev)
