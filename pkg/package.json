@@ -1,0 +1,18 @@
+{
+  "name": "gif-editor",
+  "type": "module",
+  "collaborators": [
+    "csh1668 <tjgus1668@naver.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "gif_editor_bg.wasm",
+    "gif_editor.js",
+    "gif_editor.d.ts"
+  ],
+  "main": "gif_editor.js",
+  "types": "gif_editor.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
