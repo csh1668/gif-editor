@@ -2,7 +2,7 @@ pre-commit:
   parallel: true
   commands:
     biome:
-      run: pnpm biome:check --changed
+      run: pnpm biome:fix
 
 pre-push:
   parallel: true
