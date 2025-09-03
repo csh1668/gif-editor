@@ -1,5 +1,6 @@
 mod utils;
 
+use js_sys::Uint8Array;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
