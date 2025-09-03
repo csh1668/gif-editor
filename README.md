@@ -1,84 +1,28 @@
-<div align="center">
+## GIF Editor (Video → GIF)
 
-  <h1><code>wasm-pack-template</code></h1>
+간단한 비디오(mp4/webm 등)를 클라이언트에서 GIF로 변환하는 데모입니다. FFmpeg.wasm을 사용하며 네트워크 업로드 없이 브라우저 내에서 처리합니다.
 
-  <strong>A template for kick starting a Rust and WebAssembly project using <a href="https://github.com/rustwasm/wasm-pack">wasm-pack</a>.</strong>
+### 사용법
+- 홈 화면에서 비디오를 선택합니다.
+- 옵션을 조정합니다:
+  - 시작 초, 길이(트림)
+  - 너비(px)
+  - FPS
+  - 팔레트 사용(권장)
+- "GIF 변환"을 누르면 미리보기와 "저장" 버튼이 표시됩니다.
 
-  <p>
-    <a href="https://travis-ci.org/rustwasm/wasm-pack-template"><img src="https://img.shields.io/travis/rustwasm/wasm-pack-template.svg?style=flat-square" alt="Build Status" /></a>
-  </p>
+### 성능/용량 팁
+- GIF는 비효율적인 포맷입니다. 가능한 한 짧게(2–5초), 낮은 해상도(360–480px), 낮은 FPS(8–12)로 설정하세요.
+- "팔레트 사용"은 품질을 유지하면서 용량을 줄여줍니다.
+- 긴 영상/고해상도/높은 FPS 조합은 브라우저 메모리 사용량을 크게 늘립니다.
 
-  <h3>
-    <a href="https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html">Tutorial</a>
-    <span> | </span>
-    <a href="https://discordapp.com/channels/442252698964721669/443151097398296587">Chat</a>
-  </h3>
+### 브라우저 메모리 관리
+- FFmpeg.wasm은 변환 중 메모리를 많이 사용합니다.
+- 본 앱은 변환 후 MEMFS(`input.mp4`, `out.gif`, `palette.png`)를 즉시 삭제하고, 미리보기 URL도 컴포넌트 unmount 시 해제합니다.
+- 여전히 메모리 부족이 발생하면:
+  - 길이를 더 줄이거나, 너비/FPS를 낮추세요.
+  - 모바일/저사양 기기에서는 480px, FPS 8–10을 권장합니다.
+  - 아주 긴 영상은 서버 변환(ffmpeg 서버/Cloud Functions)로 오프로딩을 고려하세요.
 
-  <sub>Built with 🦀🕸 by <a href="https://rustwasm.github.io/">The Rust and WebAssembly Working Group</a></sub>
-</div>
-
-## About
-
-[**📚 Read this template tutorial! 📚**][template-docs]
-
-This template is designed for compiling Rust libraries into WebAssembly and
-publishing the resulting package to NPM.
-
-Be sure to check out [other `wasm-pack` tutorials online][tutorials] for other
-templates and usages of `wasm-pack`.
-
-[tutorials]: https://rustwasm.github.io/docs/wasm-pack/tutorials/index.html
-[template-docs]: https://rustwasm.github.io/docs/wasm-pack/tutorials/npm-browser-packages/index.html
-
-## 🚴 Usage
-
-### 🐑 Use `cargo generate` to Clone this Template
-
-[Learn more about `cargo generate` here.](https://github.com/ashleygwilliams/cargo-generate)
-
-```
-cargo generate --git https://github.com/rustwasm/wasm-pack-template.git --name my-project
-cd my-project
-```
-
-### 🛠️ Build with `wasm-pack build`
-
-```
-wasm-pack build
-```
-
-### 🔬 Test in Headless Browsers with `wasm-pack test`
-
-```
-wasm-pack test --headless --firefox
-```
-
-### 🎁 Publish to NPM with `wasm-pack publish`
-
-```
-wasm-pack publish
-```
-
-## 🔋 Batteries Included
-
-* [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen) for communicating
-  between WebAssembly and JavaScript.
-* [`console_error_panic_hook`](https://github.com/rustwasm/console_error_panic_hook)
-  for logging panic messages to the developer console.
-* `LICENSE-APACHE` and `LICENSE-MIT`: most Rust projects are licensed this way, so these are included for you
-
-## License
-
-Licensed under either of
-
-* Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
-* MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
-
-at your option.
-
-### Contribution
-
-Unless you explicitly state otherwise, any contribution intentionally
-submitted for inclusion in the work by you, as defined in the Apache-2.0
-license, shall be dual licensed as above, without any additional terms or
-conditions.
+### 개발
+- `pnpm dev`로 실행
