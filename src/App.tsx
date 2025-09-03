@@ -1,18 +1,15 @@
-import { useEffect } from 'react';
-import './App.css';
-import init, { greet } from '@pkg/gif_editor.js';
+import init from "@pkg/gif_editor.js";
+import { useEffect } from "react";
+import VideoToGif from "./components/VideoToGif";
 
 function App() {
-  useEffect(() => {
-    (async () => {
-      await init();
-      greet();
-    })();
-  }, []);
+	useEffect(() => {
+		(async () => {
+			await init();
+		})();
+	}, []);
 
-  return (
-    <div>Hello, World!</div>
-  )
+	return <VideoToGif />;
 }
 
-export default App
+export default App;
