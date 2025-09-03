@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      run: pnpm biome:check --changed
+
+pre-push:
+  parallel: true
+  commands:
+    biome:
+      run: pnpm biome:check
