@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout() {
 	return (
@@ -39,6 +40,7 @@ export default function RootLayout() {
 			</nav>
 			<main className="p-4">
 				<Outlet />
+				<Analytics />
 			</main>
 		</div>
 	);
