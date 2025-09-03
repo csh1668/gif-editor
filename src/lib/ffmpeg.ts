@@ -1,14 +1,12 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
-export type PaletteUsage = "on" | "off";
-
 export interface ConvertGifOptions {
 	startSec: number;
 	durationSec: number | null;
 	width: number | null;
+	height: number | null;
 	fps: number;
-	paletteUse: PaletteUsage;
 }
 
 function createSingletonFFmpeg(): FFmpeg {
@@ -52,7 +50,7 @@ export async function convertVideoToGif(
 	input: File | Uint8Array,
 	options: ConvertGifOptions,
 ): Promise<Blob> {
-	const { startSec, durationSec, width, fps, paletteUse } = options;
+	const { startSec, durationSec, width, height, fps } = options;
 	const ffmpeg = await getFFmpeg();
 
 	const inputName = "input.mp4";
@@ -72,49 +70,24 @@ export async function convertVideoToGif(
 	if (startSec > 0) trimArgs.push("-ss", String(startSec));
 	if (durationSec && durationSec > 0) trimArgs.push("-t", String(durationSec));
 
-	const scaleFilter = width
-		? `scale=${width}:-1:flags=lanczos`
-		: "scale=iw:-1:flags=lanczos";
-
-	if (paletteUse === "on") {
-		await ffmpeg.exec([
-			"-i",
-			inputName,
-			...trimArgs,
-			"-vf",
-			`${scaleFilter},fps=${fps},palettegen=max_colors=128`,
-			"-f",
-			"image2",
-			"-y",
-			"palette.png",
-		]);
-
-		await ffmpeg.exec([
-			"-i",
-			inputName,
-			...trimArgs,
-			"-i",
-			"palette.png",
-			"-lavfi",
-			`${scaleFilter},fps=${fps} [x]; [x][1:v] paletteuse=dither=bayer:bayer_scale=3`,
-			"-y",
-			outputName,
-		]);
-
-		try {
-			ffmpeg.deleteFile("palette.png");
-		} catch {}
-	} else {
-		await ffmpeg.exec([
-			"-i",
-			inputName,
-			...trimArgs,
-			"-vf",
-			`${scaleFilter},fps=${fps}`,
-			"-y",
-			outputName,
-		]);
+	let scaleFilter = "scale=iw:-1:flags=lanczos";
+	if (width && height) {
+		scaleFilter = `scale=${width}:${height}:flags=lanczos`;
+	} else if (width && !height) {
+		scaleFilter = `scale=${width}:-1:flags=lanczos`;
+	} else if (!width && height) {
+		scaleFilter = `scale=-1:${height}:flags=lanczos`;
 	}
+
+	await ffmpeg.exec([
+		"-i",
+		inputName,
+		...trimArgs,
+		"-vf",
+		`${scaleFilter},fps=${fps}`,
+		"-y",
+		outputName,
+	]);
 
 	const data = await ffmpeg.readFile(outputName);
 	const bytes =
