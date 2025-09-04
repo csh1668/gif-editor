@@ -1,4 +1,4 @@
-import VideoToGif from "../components/video-to-gif";
+import VideoToGif from "../components/features/video-to-gif";
 
 export default function App() {
 	return <VideoToGif />;

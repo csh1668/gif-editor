@@ -1,5 +1,5 @@
-import { Link, Outlet } from "react-router";
 import { Analytics } from "@vercel/analytics/react";
+import { Link, Outlet } from "react-router";
 
 export default function RootLayout() {
 	return (
