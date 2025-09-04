@@ -41,12 +41,12 @@ export default function VideoToGif() {
 			</Card>
 
 			{videoPreviewUrl && (
-				<div className="mt-2">
+				<div className="mt-2 w-fit">
 					{/** biome-ignore lint/a11y/useMediaCaption: 프리뷰는 임시 미디어라 캡션이 없다 */}
 					<video
 						src={videoPreviewUrl}
 						controls
-						className="max-w-full rounded border"
+						className="border w-auto h-auto max-w-none"
 						aria-label="video preview"
 					/>
 				</div>
@@ -94,15 +94,15 @@ export default function VideoToGif() {
 					<ErrorMessage error={converter.error} />
 
 					{converter.gifUrl && (
-						<Card>
+						<Card className="w-fit">
 							<CardHeader>
 								<CardTitle>변환 결과</CardTitle>
 							</CardHeader>
-							<CardContent>
+							<CardContent className="p-0">
 								<img
 									src={converter.gifUrl}
 									alt="변환된 GIF 미리보기"
-									className="max-w-full rounded border"
+									className="border w-auto h-auto max-w-none"
 								/>
 							</CardContent>
 						</Card>
