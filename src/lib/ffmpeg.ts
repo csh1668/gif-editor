@@ -49,9 +49,17 @@ export async function getFFmpeg(): Promise<FFmpeg> {
 export async function convertVideoToGif(
 	input: File | Uint8Array,
 	options: ConvertGifOptions,
+	onProgress?: (progress: number) => void,
 ): Promise<Blob> {
 	const { startSec, durationSec, width, height, fps } = options;
 	const ffmpeg = await getFFmpeg();
+
+	// Set up progress callback if provided
+	if (onProgress) {
+		ffmpeg.on("progress", ({ progress }) => {
+			onProgress(progress * 100);
+		});
+	}
 
 	const inputName = "input.mp4";
 	const outputName = "out.gif";
