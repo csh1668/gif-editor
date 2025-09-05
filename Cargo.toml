@@ -14,12 +14,16 @@ default = ["console_error_panic_hook"]
 wasm-bindgen = "0.2.84"
 js-sys = "0.3"
 wasm-bindgen-futures = "0.4"
+image = { version = "0.25", default-features = false, features = ["gif", "png"] }
+gif = "0.13"
+web-sys = "0.3"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
 # code size when deploying.
 console_error_panic_hook = { version = "0.1.7", optional = true }
+imagequant = "4.4.1"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.34"

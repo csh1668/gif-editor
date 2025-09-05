@@ -94,18 +94,13 @@ export default function VideoToGif() {
 					<ErrorMessage error={converter.error} />
 
 					{converter.gifUrl && (
-						<Card className="w-fit">
-							<CardHeader>
-								<CardTitle>변환 결과</CardTitle>
-							</CardHeader>
-							<CardContent className="p-0">
-								<img
-									src={converter.gifUrl}
-									alt="변환된 GIF 미리보기"
-									className="border w-auto h-auto max-w-none"
-								/>
-							</CardContent>
-						</Card>
+						<div className="mt-2 w-fit">
+							<img
+								src={converter.gifUrl}
+								alt="변환된 GIF 미리보기"
+								className="border w-auto h-auto max-w-none"
+							/>
+						</div>
 					)}
 				</>
 			)}
