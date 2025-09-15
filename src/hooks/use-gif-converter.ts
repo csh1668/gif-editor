@@ -78,8 +78,9 @@ export function useGifConverter() {
 	const cleanup = useCallback(() => {
 		if (store.objectUrl) {
 			URL.revokeObjectURL(store.objectUrl);
+			store.setObjectUrl(null);
 		}
-	}, [store.objectUrl]);
+	}, [store.objectUrl, store.setObjectUrl]);
 
 	useEffect(() => {
 		return () => {
