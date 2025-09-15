@@ -28,12 +28,14 @@ export function useGifResizer() {
 				if (
 					bytes.length < 6 ||
 					!(
-						bytes[0] === 0x47 && // G
-						bytes[1] === 0x49 && // I
-						bytes[2] === 0x46 && // F
-						bytes[3] === 0x38 && // 8
-						(bytes[4] === 0x37 || bytes[4] === 0x39) && // 7 or 9
-						bytes[5] === 0x61 // a
+						(
+							bytes[0] === 0x47 && // G
+							bytes[1] === 0x49 && // I
+							bytes[2] === 0x46 && // F
+							bytes[3] === 0x38 && // 8
+							(bytes[4] === 0x37 || bytes[4] === 0x39) && // 7 or 9
+							bytes[5] === 0x61
+						) // a
 					)
 				) {
 					throw new Error("유효한 GIF 파일이 아닙니다 (헤더 불일치)");
@@ -48,7 +50,11 @@ export function useGifResizer() {
 					if (!origW || !origH) {
 						throw new Error("GIF 프레임 정보를 읽지 못했습니다");
 					}
-					store.setOriginalInfo({ width: origW, height: origH, size: file.size });
+					store.setOriginalInfo({
+						width: origW,
+						height: origH,
+						size: file.size,
+					});
 					store.setDimensions({
 						width: Math.floor(origW * 0.5),
 						height: Math.floor(origH * 0.5),

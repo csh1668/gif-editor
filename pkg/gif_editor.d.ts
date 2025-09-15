@@ -4,7 +4,7 @@ export function greet(): void;
 export class GifResizer {
   free(): void;
   constructor();
-  load_gif(gif_data: Uint8Array): void;
+  load_gif(gif_data_in: Uint8Array): void;
   resize_gifski(new_width: number, new_height: number, quality: number, fast: boolean): Uint8Array;
   readonly original_width: number;
   readonly original_height: number;

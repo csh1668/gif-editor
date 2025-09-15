@@ -124,10 +124,10 @@ export class GifResizer {
         return this;
     }
     /**
-     * @param {Uint8Array} gif_data
+     * @param {Uint8Array} gif_data_in
      */
-    load_gif(gif_data) {
-        const ptr0 = passArray8ToWasm0(gif_data, wasm.__wbindgen_malloc);
+    load_gif(gif_data_in) {
+        const ptr0 = passArray8ToWasm0(gif_data_in, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.gifresizer_load_gif(this.__wbg_ptr, ptr0, len0);
         if (ret[1]) {
