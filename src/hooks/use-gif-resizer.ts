@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { GifResizer, initWasm, resizeGif } from "@/utils/wasm";
 import { useGifResizerStore } from "@/stores/gif-resizer-store";
+import { GifResizer, initWasm, resizeGif } from "@/utils/wasm";
 
 export function useGifResizer() {
 	const store = useGifResizerStore();
@@ -23,24 +23,45 @@ export function useGifResizer() {
 				store.setOriginalUrl(url);
 
 				const arrayBuffer = await file.arrayBuffer();
+				const bytes = new Uint8Array(arrayBuffer);
+				// GIF 시그니처 검증: GIF87a 또는 GIF89a
+				if (
+					bytes.length < 6 ||
+					!(
+						bytes[0] === 0x47 && // G
+						bytes[1] === 0x49 && // I
+						bytes[2] === 0x46 && // F
+						bytes[3] === 0x38 && // 8
+						(bytes[4] === 0x37 || bytes[4] === 0x39) && // 7 or 9
+						bytes[5] === 0x61 // a
+					)
+				) {
+					throw new Error("유효한 GIF 파일이 아닙니다 (헤더 불일치)");
+				}
+
 				await initWasm();
-				const uint8Array = new Uint8Array(arrayBuffer);
 				const resizer = new GifResizer();
-				resizer.load_gif(uint8Array);
-				store.setOriginalInfo({
-					width: resizer.original_width,
-					height: resizer.original_height,
-					size: file.size,
-				});
-				store.setDimensions({
-					width: Math.floor(resizer.original_width * 0.5),
-					height: Math.floor(resizer.original_height * 0.5),
-				});
+				try {
+					resizer.load_gif(bytes);
+					const origW = resizer.original_width;
+					const origH = resizer.original_height;
+					if (!origW || !origH) {
+						throw new Error("GIF 프레임 정보를 읽지 못했습니다");
+					}
+					store.setOriginalInfo({ width: origW, height: origH, size: file.size });
+					store.setDimensions({
+						width: Math.floor(origW * 0.5),
+						height: Math.floor(origH * 0.5),
+					});
+				} finally {
+					// Rust 객체 메모리 해제
+					try {
+						resizer.free();
+					} catch {}
+				}
 			} catch (error) {
 				console.error("GIF 정보 로드 실패:", error);
-				store.setError(
-					error instanceof Error ? error.message : String(error),
-				);
+				store.setError(error instanceof Error ? error.message : String(error));
 			}
 		},
 		[store],
@@ -77,7 +98,8 @@ export function useGifResizer() {
 	const setWidth = useCallback(
 		(newWidth: number) => {
 			if (store.maintainAspectRatio && store.originalInfo) {
-				const aspectRatio = store.originalInfo.height / store.originalInfo.width;
+				const aspectRatio =
+					store.originalInfo.height / store.originalInfo.width;
 				store.setDimensions({
 					width: newWidth,
 					height: Math.round(newWidth * aspectRatio),
@@ -92,7 +114,8 @@ export function useGifResizer() {
 	const setHeight = useCallback(
 		(newHeight: number) => {
 			if (store.maintainAspectRatio && store.originalInfo) {
-				const aspectRatio = store.originalInfo.width / store.originalInfo.height;
+				const aspectRatio =
+					store.originalInfo.width / store.originalInfo.height;
 				store.setDimensions({
 					width: Math.round(newHeight * aspectRatio),
 					height: newHeight,
@@ -122,9 +145,8 @@ export function useGifResizer() {
 
 	const cleanup = useCallback(() => {
 		if (store.originalUrl) {
-      URL.revokeObjectURL(store.originalUrl);
-      
-    }
+			URL.revokeObjectURL(store.originalUrl);
+		}
 		if (store.resizedUrl) URL.revokeObjectURL(store.resizedUrl);
 	}, [store.originalUrl, store.resizedUrl]);
 
@@ -157,5 +179,3 @@ export function useGifResizer() {
 		},
 	};
 }
-
-

@@ -89,7 +89,8 @@ export async function convertVideoToGif(
 
 	// 고품질 GIF 변환: 팔레트 생성/적용(two-pass within one graph)
 	// 참고: [0:v] fps, scale, split [a][b]; [a] palettegen; [b][p] paletteuse
-	const filterComplex = `[0:v] fps=${fps},${scaleFilter},split [a][b];` +
+	const filterComplex =
+		`[0:v] fps=${fps},${scaleFilter},split [a][b];` +
 		`[a] palettegen=stats_mode=diff [p];` +
 		`[b][p] paletteuse=dither=sierra2_4a:new=1`;
 

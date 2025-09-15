@@ -77,8 +77,19 @@ impl GifResizer {
             }
             
             // 프레임 딜레이 추출 (milliseconds를 centiseconds로 변환)
-            let delay = frame.delay().numer_denom_ms();
-            let delay_cs = ((delay.0 as f64 / delay.1 as f64) / 10.0) as u16;
+            // 일부 GIF는 분모가 0이거나 유효하지 않은 값을 가질 수 있으므로 보호 연산 적용
+            let (num_ms, denom_ms) = frame.delay().numer_denom_ms();
+            let delay_cs: u16 = if denom_ms == 0 || num_ms == 0 {
+                1
+            } else {
+                let cs = (num_ms as f64 / denom_ms as f64) / 10.0;
+                let cs_rounded = cs.round();
+                if cs_rounded.is_finite() && cs_rounded >= 1.0 {
+                    cs_rounded as u16
+                } else {
+                    1
+                }
+            };
             
             self.frames.push(image);
             self.delays.push(delay_cs.max(1)); // 최소 1cs (0.01초)
