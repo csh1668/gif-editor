@@ -137,10 +137,12 @@ export class GifResizer {
     /**
      * @param {number} new_width
      * @param {number} new_height
+     * @param {number} quality
+     * @param {boolean} fast
      * @returns {Uint8Array}
      */
-    resize(new_width, new_height) {
-        const ret = wasm.gifresizer_resize(this.__wbg_ptr, new_width, new_height);
+    resize_gifski(new_width, new_height, quality, fast) {
+        const ret = wasm.gifresizer_resize_gifski(this.__wbg_ptr, new_width, new_height, quality, fast);
         if (ret[2]) {
             throw takeFromExternrefTable0(ret[1]);
         }

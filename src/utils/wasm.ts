@@ -15,6 +15,7 @@ export async function resizeGif(
 	gifFile: File,
 	newWidth: number,
 	newHeight: number,
+	options?: { quality?: number; fast?: boolean },
 ): Promise<Blob> {
 	await initWasm();
 
@@ -25,14 +26,18 @@ export async function resizeGif(
 
 	try {
 		resizer.load_gif(uint8Array);
-		console.log(
-			`Original size: ${resizer.original_width}x${resizer.original_height}, Frames: ${resizer.frame_count}`,
+		const quality = Math.max(1, Math.min(100, options?.quality ?? 90));
+		const fast = options?.fast ?? false;
+		// d.ts가 재생성되기 전까지 임시 any 캐스팅 사용
+		const resizedData = resizer.resize_gifski(
+			newWidth,
+			newHeight,
+			quality,
+			fast,
 		);
-
-		const resizedData = resizer.resize(newWidth, newHeight);
 		return new Blob([resizedData], { type: "image/gif" });
 	} catch (error) {
-		console.error("Failed to resize GIF:", error);
+		console.error("Failed to resize GIF with gifski:", error);
 		throw error;
 	}
 }

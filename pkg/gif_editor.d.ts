@@ -5,7 +5,7 @@ export class GifResizer {
   free(): void;
   constructor();
   load_gif(gif_data: Uint8Array): void;
-  resize(new_width: number, new_height: number): Uint8Array;
+  resize_gifski(new_width: number, new_height: number, quality: number, fast: boolean): Uint8Array;
   readonly original_width: number;
   readonly original_height: number;
   readonly frame_count: number;
@@ -19,7 +19,7 @@ export interface InitOutput {
   readonly __wbg_gifresizer_free: (a: number, b: number) => void;
   readonly gifresizer_new: () => number;
   readonly gifresizer_load_gif: (a: number, b: number, c: number) => [number, number];
-  readonly gifresizer_resize: (a: number, b: number, c: number) => [number, number, number];
+  readonly gifresizer_resize_gifski: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
   readonly gifresizer_original_width: (a: number) => number;
   readonly gifresizer_original_height: (a: number) => number;
   readonly gifresizer_frame_count: (a: number) => number;
