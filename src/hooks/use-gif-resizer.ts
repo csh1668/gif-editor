@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useGifResizerStore } from "@/stores/gif-resizer-store";
 import { GifResizer, initWasm, resizeGif } from "@/utils/wasm";
+import { useGifResizerStore } from "@/stores/gif-resizer-store";
 
 export function useGifResizer() {
 	const store = useGifResizerStore();
@@ -38,7 +38,9 @@ export function useGifResizer() {
 				});
 			} catch (error) {
 				console.error("GIF 정보 로드 실패:", error);
-				store.setError(error instanceof Error ? error.message : String(error));
+				store.setError(
+					error instanceof Error ? error.message : String(error),
+				);
 			}
 		},
 		[store],
@@ -75,8 +77,7 @@ export function useGifResizer() {
 	const setWidth = useCallback(
 		(newWidth: number) => {
 			if (store.maintainAspectRatio && store.originalInfo) {
-				const aspectRatio =
-					store.originalInfo.height / store.originalInfo.width;
+				const aspectRatio = store.originalInfo.height / store.originalInfo.width;
 				store.setDimensions({
 					width: newWidth,
 					height: Math.round(newWidth * aspectRatio),
@@ -91,8 +92,7 @@ export function useGifResizer() {
 	const setHeight = useCallback(
 		(newHeight: number) => {
 			if (store.maintainAspectRatio && store.originalInfo) {
-				const aspectRatio =
-					store.originalInfo.width / store.originalInfo.height;
+				const aspectRatio = store.originalInfo.width / store.originalInfo.height;
 				store.setDimensions({
 					width: Math.round(newHeight * aspectRatio),
 					height: newHeight,
@@ -122,19 +122,11 @@ export function useGifResizer() {
 
 	const cleanup = useCallback(() => {
 		if (store.originalUrl) {
-			URL.revokeObjectURL(store.originalUrl);
-			store.setOriginalUrl(null);
-		}
-		if (store.resizedUrl) {
-			URL.revokeObjectURL(store.resizedUrl);
-			store.setResizedUrl(null);
-		}
-	}, [
-		store.originalUrl,
-		store.resizedUrl,
-		store.setOriginalUrl,
-		store.setResizedUrl,
-	]);
+      URL.revokeObjectURL(store.originalUrl);
+      
+    }
+		if (store.resizedUrl) URL.revokeObjectURL(store.resizedUrl);
+	}, [store.originalUrl, store.resizedUrl]);
 
 	useEffect(() => {
 		return () => cleanup();
@@ -165,3 +157,5 @@ export function useGifResizer() {
 		},
 	};
 }
+
+

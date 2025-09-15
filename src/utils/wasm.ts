@@ -28,7 +28,6 @@ export async function resizeGif(
 		resizer.load_gif(uint8Array);
 		const quality = Math.max(1, Math.min(100, options?.quality ?? 90));
 		const fast = options?.fast ?? false;
-		// d.ts가 재생성되기 전까지 임시 any 캐스팅 사용
 		const resizedData = resizer.resize_gifski(
 			newWidth,
 			newHeight,

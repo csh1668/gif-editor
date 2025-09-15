@@ -15,10 +15,6 @@ export default function GifResize() {
 	const handleFileSelected = (file: File | null) =>
 		resizer.actions.setFile(file);
 
-	useEffect(() => {
-		return () => resizer.actions.cleanup();
-	}, [resizer.actions]);
-
 	const handleResize = () => resizer.actions.resize();
 
 	const handleDownload = () => resizer.actions.download();
