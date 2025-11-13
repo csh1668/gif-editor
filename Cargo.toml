@@ -15,7 +15,7 @@ wasm-bindgen = "0.2.84"
 js-sys = "0.3"
 wasm-bindgen-futures = "0.4"
 image = { version = "0.25", default-features = false, features = ["gif", "png"] }
-gif = "0.13"
+gif = "0.14"
 web-sys = "0.3"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
